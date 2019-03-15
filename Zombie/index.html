@@ -42,7 +42,7 @@
             document.getElementById("zombie1").src = "images/explosion.gif";
             increaseScore();
             stopInterval(move1);
-            document.getElementById("death").play();
+            playSound();
             setTimeout(postExplosion, 750, document.getElementById("zombie1").id);
             move1 = startInterval(document.getElementById("zombie1").id)
         }
@@ -51,9 +51,15 @@
             document.getElementById("zombie2").src = "images/explosion.gif";
             increaseScore();
             stopInterval(move2);
-            document.getElementById("death").play();
+            playSound();
             setTimeout(postExplosion, 750, document.getElementById("zombie2").id);
             move2 = startInterval(document.getElementById("zombie2").id)
+        }
+
+        function playSound() {
+            document.getElementById("death").pause();
+            document.getElementById("death").currentTime = 0;
+            document.getElementById("death").play();
         }
 
         function postExplosion(zombie) {
