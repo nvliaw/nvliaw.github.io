@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zombie Hunter!</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+<body>
+    <img id="zombie1" class="zombiepic" src="images/zombie.png">
+    <img id="zombie2" class="zombiepic" src="images/zombie.png">
+    <audio id="death">
+        <source src="src/zombiedeath.mp3" type="audio/mpeg">
+    </audio>
+    <h1 id="score">Your total score is: 0</h1>
+    <div id="button">
+    <button id="end">Reset Game</button>
+    </div>
+    <script>
+
+        function startGame() {
+            randomMove(document.getElementById("zombie1").id);
+            randomMove(document.getElementById("zombie2").id);
+            current_score = 0;
+            document.getElementById("score").innerHTML = "Your total score is: " + current_score;  
+            move1 = startInterval(document.getElementById("zombie1").id);  
+            move2 = startInterval(document.getElementById("zombie2").id);    
+        }
+
+        function resetGame() {
+            stopInterval(move1);
+            stopInterval(move2);
+            startGame();
+        }
+
+        function increaseScore() {
+            current_score += 1;
+            document.getElementById("score").innerHTML = "Your total score is: " + current_score;
+        }
+
+        function onClick1() {
+            document.getElementById("zombie1").src = "images/explosion.gif";
+            increaseScore();
+            stopInterval(move1);
+            document.getElementById("death").play();
+            setTimeout(postExplosion, 750, document.getElementById("zombie1").id);
+            move1 = startInterval(document.getElementById("zombie1").id)
+        }
+
+        function onClick2() {
+            document.getElementById("zombie2").src = "images/explosion.gif";
+            increaseScore();
+            stopInterval(move2);
+            document.getElementById("death").play();
+            setTimeout(postExplosion, 750, document.getElementById("zombie2").id);
+            move2 = startInterval(document.getElementById("zombie2").id)
+        }
+
+        function postExplosion(zombie) {
+            document.getElementById(zombie).src = "images/zombie.png";
+            randomMove(zombie);
+        }
+
+        function startInterval(zombie) {
+            return setInterval(randomMove, 2000, zombie);
+        }
+
+        function stopInterval(move) {
+            clearInterval(move);
+        }
+
+        function randomMove(zombie) {
+            let full_width = window.innerWidth 
+            || document.documentElement.clientWidth 
+            || document.body.clientWidth;
+            let full_height = window.innerHeight 
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+            let x_coord = Math.random() * (full_width - 50);
+            let y_coord = Math.random() * (full_height - 50);
+            document.getElementById(zombie).style.left = x_coord + "px";
+            document.getElementById(zombie).style.top = y_coord + "px";
+        }
+
+        let current_score = 0;
+        let move1;
+        let move2;
+        startGame();
+        document.getElementById("zombie1").onclick = onClick1;
+        document.getElementById("zombie2").onclick = onClick2;
+        document.getElementById("end").onclick = resetGame;
+
+    </script>
+</body>
+
+</html>
