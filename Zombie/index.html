@@ -63,7 +63,7 @@
                 increaseScore();
                 stopInterval(move1);
                 playSound();
-                setTimeout(postExplosion, 750, document.getElementById("zombie1").id, clicked1);
+                setTimeout(postExplosion1, 750);
                 move1 = startInterval(document.getElementById("zombie1").id)
             }
             clicked1 = true;
@@ -75,7 +75,7 @@
                 increaseScore();
                 stopInterval(move2);
                 playSound();
-                setTimeout(postExplosion, 750, document.getElementById("zombie2").id, clicked2);
+                setTimeout(postExplosion2, 750);
                 move2 = startInterval(document.getElementById("zombie2").id)
             }
             clicked2 = true;
@@ -87,10 +87,16 @@
             document.getElementById("death").play();
         }
 
-        function postExplosion(zombie, clicked) {
+        function postExplosion1() {
             document.getElementById(zombie).src = "images/zombie.png";
-            randomMove(zombie);
-            clicked = false;
+            randomMove("zombie1");
+            clicked1 = false;
+        }
+
+        function postExplosion2() {
+            document.getElementById(zombie).src = "images/zombie.png";
+            randomMove("zombie2");
+            clicked2 = false;
         }
 
         function startInterval(zombie) {
@@ -115,7 +121,8 @@
         }
 
         let current_score = 0;
-        let clicked1, clicked2 = false;
+        let clicked1 = false;
+        let clicked2 = false;
         let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
         startGame();
         document.getElementById("zombie1").onclick = onClick1;
