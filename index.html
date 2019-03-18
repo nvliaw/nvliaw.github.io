@@ -1,120 +1,67 @@
 <!DOCTYPE html>
 <html>
 
-<head>
-    <title>Zombie Hunter!</title>
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-</head>
+    <head>
+        <title>Nicholas Liaw's Personal Page</title>
+        <style>
+            ol {list-style-position:inside;list-style-type:disc;}
+            li {padding:10px;font-family:Verdana;}
+            b {font-size:large;}
+            div {margin-bottom:15px; width:700px;}        
+        </style>
+    </head>
 
-<body>
-    <img id="zombie1" class="zombiepic" src="images/zombie.png">
-    <img id="zombie2" class="zombiepic" src="images/zombie.png">
-    <audio id="death">
-        <source src="src/zombiedeath.mp3" type="audio/mpeg">
-    </audio>
-    <h1 id="score">Your total score is: 0</h1>
-    <div id="button">
-    <button id="end">Reset Game</button>
-    </div>
-    <script>
-
-        function startGame() {
-            let full_width = window.innerWidth 
-            || document.documentElement.clientWidth 
-            || document.body.clientWidth;
-            let full_height = window.innerHeight 
-            || document.documentElement.clientHeight
-            || document.body.clientHeight;
-            orig_x1 = Math.random() * (full_width - 50);
-            orig_x2 = Math.random() * (full_width - 50);
-            orig_y1 = Math.random() * (full_height - 50);
-            orig_y2 = Math.random() * (full_height - 50);
-            document.getElementById("zombie1").style.left = orig_x1 + "px";
-            document.getElementById("zombie1").style.top = orig_y1 + "px";
-            document.getElementById("zombie2").style.left = orig_x2 + "px";
-            document.getElementById("zombie2").style.top = orig_y2 + "px";
-            current_score = 0;
-            document.getElementById("score").innerHTML = "Your total score is: " + current_score;  
-            move1 = startInterval(document.getElementById("zombie1").id);  
-            move2 = startInterval(document.getElementById("zombie2").id);    
-        }
-
-        function resetGame() {
-            stopInterval(move1);
-            stopInterval(move2);
-            document.getElementById("zombie1").style.left = orig_x1 + "px";
-            document.getElementById("zombie1").style.top = orig_y1 + "px";
-            document.getElementById("zombie2").style.left = orig_x2 + "px";
-            document.getElementById("zombie2").style.top = orig_y2 + "px";
-            current_score = 0;
-            document.getElementById("score").innerHTML = "Your total score is: " + current_score;
-            move1 = startInterval(document.getElementById("zombie1").id);  
-            move2 = startInterval(document.getElementById("zombie2").id); 
-        }
-
-        function increaseScore() {
-            current_score += 1;
-            document.getElementById("score").innerHTML = "Your total score is: " + current_score;
-        }
-
-        function onClick1() {
-            document.getElementById("zombie1").src = "images/explosion.gif";
-            increaseScore();
-            stopInterval(move1);
-            playSound();
-            setTimeout(postExplosion, 750, document.getElementById("zombie1").id);
-            move1 = startInterval(document.getElementById("zombie1").id)
-        }
-
-        function onClick2() {
-            document.getElementById("zombie2").src = "images/explosion.gif";
-            increaseScore();
-            stopInterval(move2);
-            playSound();
-            setTimeout(postExplosion, 750, document.getElementById("zombie2").id);
-            move2 = startInterval(document.getElementById("zombie2").id)
-        }
-
-        function playSound() {
-            document.getElementById("death").pause();
-            document.getElementById("death").currentTime = 0;
-            document.getElementById("death").play();
-        }
-
-        function postExplosion(zombie) {
-            document.getElementById(zombie).src = "images/zombie.png";
-            randomMove(zombie);
-        }
-
-        function startInterval(zombie) {
-            return setInterval(randomMove, 2000, zombie);
-        }
-
-        function stopInterval(move) {
-            clearInterval(move);
-        }
-
-        function randomMove(zombie) {
-            let full_width = window.innerWidth 
-            || document.documentElement.clientWidth 
-            || document.body.clientWidth;
-            let full_height = window.innerHeight 
-            || document.documentElement.clientHeight
-            || document.body.clientHeight;
-            let x_coord = Math.random() * (full_width - 50);
-            let y_coord = Math.random() * (full_height - 50);
-            document.getElementById(zombie).style.left = x_coord + "px";
-            document.getElementById(zombie).style.top = y_coord + "px";
-        }
-
-        let current_score = 0;
-        let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
-        startGame();
-        document.getElementById("zombie1").onclick = onClick1;
-        document.getElementById("zombie2").onclick = onClick2;
-        document.getElementById("end").onclick = resetGame;
-
-    </script>
-</body>
+    <body>
+        <h1>Welcome to the personal website of Nicholas Liaw</h1>
+        <h2>Introduction</h2>
+        <p>Hello! My name is Nicholas Liaw and I am just starting the CST program at BCIT. I have done a little bit of python and java in the past. However, I still feel a bit nervous starting this program but I hope to learn a ton in the next two years!</p>
+        <img src="images/Batman.png" alt="Picture of me" width="100" height="100">
+        <h2>List of courses I am taking this term and their course outline:</h2>
+        <ol>
+            <div style="background-color:lightpink;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086123"><li><b>Comp-1113</b><br/><br/> 
+            Comp 1113 is partially discrete mathematics, partially an introduction to linear equations.
+            The purpose of this course is to give a strong foundation for future technical and programming courses.
+            The course is divided into three parts: (1) Boolean algebra and design of logic circuits;
+            (2) number systems and data representation; and (3) functions, linear equations, vectors and matrices.
+            </li></a>
+            </div>
+            <div style="background-color: mediumorchid;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086130"><li><b>Comp-1712</b><br/><br/>
+            Business Analysis and Systems Design is the study of concepts, processes and tools that professionals use to plan and develop information systems to industry standards. Students learn how to ask implicit questions, to create and document communication plans and to make better decisions prior to creating a software system.
+            </li></a>
+            </div>
+            <div style="background-color:aquamarine;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086121"><li><b>Comp-1100</b><br/><br/>
+            The course covers topics of importance to new and continuing students on how to balance school and related activities to enhance chances of success in their academic careers. In this course students will learn a variety of different techniques to improve study habits, note taking, and time management skills. The class will also present other topics of interest to CST students and will introduce students to various support systems at BCIT.
+            </li></a>
+            </div>
+            <div style="background-color:violet;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086129"><li><b>Comp-1536</b><br/><br/>
+            This course is a web design and programming course with an emphasis on good planning, interface design, multimedia, client-side scripting with JavaScript, server-side scripting, and best practices. COMP 1536 will provide students with a solid understanding about how web applications are constructed and deployed. Students will be taught to use client-side RAD tools in order to enhance their productivity. Students will complete a number of assignments and exams as well as one larger project.
+            </li></a>
+            </div>
+            <div style="background-color:navajowhite;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086126"><li><b>Comp-1510</b><br/><br/>
+            This hands-on course is the foundation for all future programming courses and complements COMP 1536 and COMP 1910. This course introduces the fundamental concepts of programming including design, development, testing, debugging simple programs, as well as error-handling, and problem solving.    
+            </li></a>
+            </div>
+            <div style="background-color:honeydew;">
+            <a href= "https://www.bcit.ca/study/outlines/20191086134"><li><b>Comp-1930</b><br/><br/>
+            Students learn to work in a collaborative environment and complete a small-scale software project: a web app. Design and managing of implementation concepts will be introduced: User Experience Design (XSD) and Agile methodology. 
+            </li></a>
+            </div>
+        </ol>
+        <p>Please click on the backpack below for BCIT's website!</p>
+        <a href= "https://www.bcit.ca">
+            <img src="images/Backpack.png" alt="Cartoon image of a backpack" width="75">
+        </a>
+        <p>If you would like to see a funny cartoon about computer science, please click on the paper plane below!</p>
+        <a href= "https://i1.wp.com/s3.amazonaws.com/production-wordpress-assets/blog/wp-content/uploads/2013/03/compiling1.png?resize=413%2C360&ssl=1">
+            <img src="images/PaperPlane.png" alt="Cartoon image of a paper plane" width="75">
+        </a>
+        <h3>To view my resume page, click <a href= "resume.html">here</a></h3>
+        <h3>To download my resume, click <a href="images/Nicholas Vui Liaw's Resume.pdf">here</a> </h3>
+    </body>
 
 </html>
