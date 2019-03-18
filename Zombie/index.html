@@ -58,21 +58,27 @@
         }
 
         function onClick1() {
-            document.getElementById("zombie1").src = "images/explosion.gif";
-            increaseScore();
-            stopInterval(move1);
-            playSound();
-            setTimeout(postExplosion, 750, document.getElementById("zombie1").id);
-            move1 = startInterval(document.getElementById("zombie1").id)
+            if (clicked1 === false) {
+                document.getElementById("zombie1").src = "images/explosion.gif";
+                increaseScore();
+                stopInterval(move1);
+                playSound();
+                setTimeout(postExplosion, 750, document.getElementById("zombie1").id, clicked1);
+                move1 = startInterval(document.getElementById("zombie1").id)
+            }
+            clicked1 = true;
         }
 
         function onClick2() {
-            document.getElementById("zombie2").src = "images/explosion.gif";
-            increaseScore();
-            stopInterval(move2);
-            playSound();
-            setTimeout(postExplosion, 750, document.getElementById("zombie2").id);
-            move2 = startInterval(document.getElementById("zombie2").id)
+            if (clicked2 === false) {
+                document.getElementById("zombie2").src = "images/explosion.gif";
+                increaseScore();
+                stopInterval(move2);
+                playSound();
+                setTimeout(postExplosion, 750, document.getElementById("zombie2").id, clicked2);
+                move2 = startInterval(document.getElementById("zombie2").id)
+            }
+            clicked2 = true;
         }
 
         function playSound() {
@@ -81,9 +87,10 @@
             document.getElementById("death").play();
         }
 
-        function postExplosion(zombie) {
+        function postExplosion(zombie, clicked) {
             document.getElementById(zombie).src = "images/zombie.png";
             randomMove(zombie);
+            clicked = false;
         }
 
         function startInterval(zombie) {
@@ -108,6 +115,7 @@
         }
 
         let current_score = 0;
+        let clicked1, clicked2 = false;
         let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
         startGame();
         document.getElementById("zombie1").onclick = onClick1;
