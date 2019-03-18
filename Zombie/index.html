@@ -19,8 +19,20 @@
     <script>
 
         function startGame() {
-            randomMove(document.getElementById("zombie1").id);
-            randomMove(document.getElementById("zombie2").id);
+            let full_width = window.innerWidth 
+            || document.documentElement.clientWidth 
+            || document.body.clientWidth;
+            let full_height = window.innerHeight 
+            || document.documentElement.clientHeight
+            || document.body.clientHeight;
+            orig_x1 = Math.random() * (full_width - 50);
+            orig_x2 = Math.random() * (full_width - 50);
+            orig_y1 = Math.random() * (full_height - 50);
+            orig_y2 = Math.random() * (full_height - 50);
+            document.getElementById("zombie1").style.left = orig_x1 + "px";
+            document.getElementById("zombie1").style.top = orig_y1 + "px";
+            document.getElementById("zombie2").style.left = orig_x2 + "px";
+            document.getElementById("zombie2").style.top = orig_y2 + "px";
             current_score = 0;
             document.getElementById("score").innerHTML = "Your total score is: " + current_score;  
             move1 = startInterval(document.getElementById("zombie1").id);  
@@ -30,7 +42,14 @@
         function resetGame() {
             stopInterval(move1);
             stopInterval(move2);
-            startGame();
+            document.getElementById("zombie1").style.left = orig_x1 + "px";
+            document.getElementById("zombie1").style.top = orig_y1 + "px";
+            document.getElementById("zombie2").style.left = orig_x2 + "px";
+            document.getElementById("zombie2").style.top = orig_y2 + "px";
+            current_score = 0;
+            document.getElementById("score").innerHTML = "Your total score is: " + current_score;
+            move1 = startInterval(document.getElementById("zombie1").id);  
+            move2 = startInterval(document.getElementById("zombie2").id); 
         }
 
         function increaseScore() {
@@ -89,8 +108,7 @@
         }
 
         let current_score = 0;
-        let move1;
-        let move2;
+        let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
         startGame();
         document.getElementById("zombie1").onclick = onClick1;
         document.getElementById("zombie2").onclick = onClick2;
