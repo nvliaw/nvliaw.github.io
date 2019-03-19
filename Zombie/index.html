@@ -7,49 +7,46 @@
 </head>
 
 <body>
-    <img id="zombie1" class="zombiepic" src="images/zombie.png">
-    <img id="zombie2" class="zombiepic" src="images/zombie.png">
+    <img id="zombie1" src="images/zombie.png">
+    <img id="zombie2" src="images/zombie.png">
     <audio id="death">
         <source src="src/zombiedeath.mp3" type="audio/mpeg">
     </audio>
     <h1 id="score">Your total score is: 0</h1>
     <div id="button">
-    <button id="end">Reset Game</button>
+        <button id="end">Reset Game</button>
     </div>
     <script>
 
+        let current_score = 0;
+        let clicked1 = false;
+        let clicked2 = false;
+        let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
+
         function startGame() {
-            let full_width = window.innerWidth 
-            || document.documentElement.clientWidth 
-            || document.body.clientWidth;
-            let full_height = window.innerHeight 
-            || document.documentElement.clientHeight
-            || document.body.clientHeight;
-            orig_x1 = Math.random() * (full_width - 50);
-            orig_x2 = Math.random() * (full_width - 50);
-            orig_y1 = Math.random() * (full_height - 50);
-            orig_y2 = Math.random() * (full_height - 50);
-            document.getElementById("zombie1").style.left = orig_x1 + "px";
-            document.getElementById("zombie1").style.top = orig_y1 + "px";
-            document.getElementById("zombie2").style.left = orig_x2 + "px";
-            document.getElementById("zombie2").style.top = orig_y2 + "px";
+            randomMove("zombie1");
+            randomMove("zombie2");
+            orig_x1 = document.getElementById("zombie1").style.left;
+            orig_y1 = document.getElementById("zombie1").style.top;
+            orig_x2 = document.getElementById("zombie2").style.left;
+            orig_y2 = document.getElementById("zombie2").style.top;
             current_score = 0;
             document.getElementById("score").innerHTML = "Your total score is: " + current_score;  
-            move1 = startInterval(document.getElementById("zombie1").id);  
-            move2 = startInterval(document.getElementById("zombie2").id);    
+            move1 = startInterval("zombie1");  
+            move2 = startInterval("zombie2");   
         }
 
         function resetGame() {
             stopInterval(move1);
             stopInterval(move2);
-            document.getElementById("zombie1").style.left = orig_x1 + "px";
-            document.getElementById("zombie1").style.top = orig_y1 + "px";
-            document.getElementById("zombie2").style.left = orig_x2 + "px";
-            document.getElementById("zombie2").style.top = orig_y2 + "px";
+            document.getElementById("zombie1").style.left = orig_x1;
+            document.getElementById("zombie1").style.top = orig_y1;
+            document.getElementById("zombie2").style.left = orig_x2;
+            document.getElementById("zombie2").style.top = orig_y2;
             current_score = 0;
             document.getElementById("score").innerHTML = "Your total score is: " + current_score;
-            move1 = startInterval(document.getElementById("zombie1").id);  
-            move2 = startInterval(document.getElementById("zombie2").id); 
+            move1 = startInterval("zombie1");  
+            move2 = startInterval("zombie2"); 
         }
 
         function increaseScore() {
@@ -64,7 +61,6 @@
                 stopInterval(move1);
                 playSound();
                 setTimeout(postExplosion1, 750);
-                move1 = startInterval(document.getElementById("zombie1").id)
             }
             clicked1 = true;
         }
@@ -76,7 +72,6 @@
                 stopInterval(move2);
                 playSound();
                 setTimeout(postExplosion2, 750);
-                move2 = startInterval(document.getElementById("zombie2").id)
             }
             clicked2 = true;
         }
@@ -90,12 +85,14 @@
         function postExplosion1() {
             document.getElementById("zombie1").src = "images/zombie.png";
             randomMove("zombie1");
+            move1 = startInterval("zombie1");
             clicked1 = false;
         }
 
         function postExplosion2() {
             document.getElementById("zombie2").src = "images/zombie.png";
             randomMove("zombie2");
+            move2 = startInterval("zombie2");
             clicked2 = false;
         }
 
@@ -120,10 +117,6 @@
             document.getElementById(zombie).style.top = y_coord + "px";
         }
 
-        let current_score = 0;
-        let clicked1 = false;
-        let clicked2 = false;
-        let move1, move2, orig_x1, orig_x2, orig_y1, orig_y2;
         startGame();
         document.getElementById("zombie1").onclick = onClick1;
         document.getElementById("zombie2").onclick = onClick2;
