@@ -59,6 +59,7 @@
                 stopInterval(move1);
                 playSound();
                 setTimeout(postExplosion1, 750);
+                move1 = startInterval("zombie1");
             }
             clicked1 = true;
         }
@@ -70,6 +71,7 @@
                 stopInterval(move2);
                 playSound();
                 setTimeout(postExplosion2, 750);
+                move2 = startInterval("zombie2");
             }
             clicked2 = true;
         }
@@ -83,14 +85,12 @@
         function postExplosion1() {
             document.getElementById("zombie1").src = "images/zombie.png";
             randomMove("zombie1");
-            move1 = startInterval("zombie1");
             clicked1 = false;
         }
 
         function postExplosion2() {
             document.getElementById("zombie2").src = "images/zombie.png";
             randomMove("zombie2");
-            move2 = startInterval("zombie2");
             clicked2 = false;
         }
 
