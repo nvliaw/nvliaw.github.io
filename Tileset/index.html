@@ -136,18 +136,16 @@
 
         function update(time, delta) {
             // Runs once per frame for the duration of the scene
-            if (game.input.mousePointer.isDown)
+            if (game.input.activePointer.isDown)
             {
-                this.physics.moveTo(player, game.input.mousePointer.x, game.input.mousePointer.y, 750);
-                console.log(player.x);
-                console.log(game.input.mousePointer.x);
-                if (Math.abs(player.x - game.input.mousePointer.x) < player.x*0.05 && Math.abs(player.y - game.input.mousePointer.y) < player.y*0.05) {
+                this.physics.moveTo(player, game.input.activePointer.x, game.input.activePointer.y, 750);
+                if (Math.abs(player.x - game.input.activePointer.x) < player.x*0.05 && Math.abs(player.y - game.input.activePointer.y) < player.y*0.05) {
                     {
                         player.body.velocity.setTo(0, 0);
                         player.anims.play('turn', true);
                     }
                 }
-                else if (player.x < game.input.mousePointer.x)
+                else if (player.x < game.input.activePointer.x)
                 {
                     player.anims.play('left', true);
                 }
