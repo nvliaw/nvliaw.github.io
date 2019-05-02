@@ -94,7 +94,7 @@
             //Player animation when walking left. Repeat:-1 is a loop.
             // https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html
             this.anims.create({
-                key: 'left',
+                key: 'right',
                 frames: [
                     { key: 'run1'},
                     { key: 'run2'},
@@ -147,10 +147,13 @@
                 }
                 else if (player.x < game.input.activePointer.x)
                 {
-                    player.anims.play('left', true);
+                    player.flipX = false;
+                    player.anims.play('right', true);
                 }
                 else {
-                    player.anims.play('left', true);
+                    console.log("im here")
+                    player.flipX = true;
+                    player.anims.play('right', true);
                 }
             }
             else
