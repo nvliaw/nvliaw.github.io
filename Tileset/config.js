@@ -63,7 +63,7 @@ class SceneA extends Phaser.Scene {
         this.player = this.physics.add.sprite(config.scale.width*0.75, config.scale.height*0.75, 'idle1');
 
         //Scale player down to 12%
-        this.player.setScale(0.3, 0.3);
+        this.player.setScale(0.12, 0.12);
 
         //Player animation when walking left. Repeat:-1 is a loop.
         // https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html
@@ -188,17 +188,24 @@ class SceneB extends Phaser.Scene {
     preload(){
         // Method that's called at the beginning that loads all my assets (sprites, sounds, etc)
         this.load.image('player', 'assets/bomb.png');
-        this.load.image('star', 'assets/star.png');
-        this.load.image('meat', 'assets/meat.png');
+        this.load.spritesheet('foodset',
+            'sprite/food.png',
+            {frameWidth: 32, frameHeight: 32});
     }
 
     create(){
         // Initializes our scene such as the position of the sprites
         this.player = this.physics.add.sprite(150, 150, 'player');
-        this.star = this.physics.add.sprite(Phaser.Math.Between(0, screenwidth), Phaser.Math.Between(0, screenheight), 'star');
-        this.star.setScale(1.50, 1.50);
-        this.meat = this.physics.add.sprite(Phaser.Math.Between(0, screenwidth), Phaser.Math.Between(0, screenheight), 'meat');
-        this.meat.setScale(0.10, 0.10);
+        this.cheese = this.physics.add.sprite(Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85), Phaser.Math.Between(screenheight*0.10, screenheight*0.85), 'foodset', 2);
+        this.cheese.setScale(1.50, 1.50);
+        this.meat = this.physics.add.sprite(Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85), Phaser.Math.Between(screenheight*0.10, screenheight*0.85), 'foodset', 1);
+        this.meat.setScale(1.50, 1.50);
+        this.broccoli = this.physics.add.sprite(Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85), Phaser.Math.Between(screenheight*0.10, screenheight*0.85), 'foodset', 4);
+        this.broccoli.setScale(1.50, 1.50);
+        this.rice = this.physics.add.sprite(Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85), Phaser.Math.Between(screenheight*0.10, screenheight*0.85), 'foodset', 3);
+        this.rice.setScale(1.50, 1.50);
+        this.fish = this.physics.add.sprite(Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85), Phaser.Math.Between(screenheight*0.10, screenheight*0.85), 'foodset', 6);
+        this.fish.setScale(1.50, 1.50);
         this.cameras.main.setBackgroundColor('#3498db')
 
         // score is stored in a variable and initialized at 0
@@ -228,13 +235,25 @@ class SceneB extends Phaser.Scene {
             this.player.body.velocity.setTo(0, 0);
         }
 
-        // If player overlaps with the star, call hit_star()
-        if (this.physics.overlap(this.player, this.star)){
-            this.hit_star();
+        // If player overlaps with the star, call hit_cheese()
+        if (this.physics.overlap(this.player, this.cheese)){
+            this.hit_cheese();
         }
         // If player overlaps with the meat, call hit_meat()
         if (this.physics.overlap(this.player, this.meat)){
             this.hit_meat();
+        }
+        // If player overlaps with the meat, call hit_rice()
+        if (this.physics.overlap(this.player, this.rice)){
+            this.hit_rice();
+        }
+        // If player overlaps with the meat, call hit_broccoli()
+        if (this.physics.overlap(this.player, this.broccoli)){
+            this.hit_broccoli();
+        }
+        // If player overlaps with the meat, call hit_fish()
+        if (this.physics.overlap(this.player, this.fish)){
+            this.hit_fish();
         }
         if (this.timer > 0){
             // Doesn't decrement each second right now, need to fix
@@ -242,10 +261,34 @@ class SceneB extends Phaser.Scene {
         }
     }
 
-    hit_star(){
-        // Change the position of the star randomly
-        this.star.x = Phaser.Math.Between(100, 600);
-        this.star.y = Phaser.Math.Between(100, 300);
+    hit_cheese(){
+        // Change the position of the cheese randomly
+        this.cheese.x = Phaser.Math.Between(0, Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85));
+        this.cheese.y = Phaser.Math.Between(0, Phaser.Math.Between(screenheight*0.10, screenheight*0.85));
+
+        // Increment the score
+        this.score += 10;
+
+        // Display the updated score on the screen
+        this.scoreText.setText('score: ' + this.score);
+    }
+
+    hit_meat(){
+        // Change the position of the meat randomly
+        this.meat.x = Phaser.Math.Between(0, Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85));
+        this.meat.y = Phaser.Math.Between(0, Phaser.Math.Between(screenheight*0.10, screenheight*0.85));
+
+        // Increment the score
+        this.score += 25;
+
+        // Display the updated score on the screen
+        this.scoreText.setText('score: ' + this.score);
+    }
+
+    hit_broccoli(){
+        // Change the position of the cheese randomly
+        this.broccoli.x = Phaser.Math.Between(0, Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85));
+        this.broccoli.y = Phaser.Math.Between(0, Phaser.Math.Between(screenheight*0.10, screenheight*0.85));
 
         // Increment the score
         this.score -= 25;
@@ -254,13 +297,25 @@ class SceneB extends Phaser.Scene {
         this.scoreText.setText('score: ' + this.score);
     }
 
-    hit_meat(){
-        // Change the position of the meat randomly
-        this.meat.x = Phaser.Math.Between(0, Phaser.Math.Between(0, screenwidth));
-        this.meat.y = Phaser.Math.Between(0, Phaser.Math.Between(0, screenheight));
+    hit_rice(){
+        // Change the position of the cheese randomly
+        this.rice.x = Phaser.Math.Between(0, Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85));
+        this.rice.y = Phaser.Math.Between(0, Phaser.Math.Between(screenheight*0.10, screenheight*0.85));
 
         // Increment the score
-        this.score += 10;
+        this.score -= 10;
+
+        // Display the updated score on the screen
+        this.scoreText.setText('score: ' + this.score);
+    }
+
+    hit_fish(){
+        // Change the position of the cheese randomly
+        this.fish.x = Phaser.Math.Between(0, Phaser.Math.Between(screenwidth*0.10, screenwidth*0.85));
+        this.fish.y = Phaser.Math.Between(0, Phaser.Math.Between(screenheight*0.10, screenheight*0.85));
+
+        // Increment the score
+        this.score += 5;
 
         // Display the updated score on the screen
         this.scoreText.setText('score: ' + this.score);
