@@ -63,7 +63,7 @@ class SceneA extends Phaser.Scene {
         this.player = this.physics.add.sprite(config.scale.width*0.75, config.scale.height*0.75, 'idle1');
 
         //Scale player down to 12%
-        this.player.setScale(0.12, 0.12);
+        this.player.setScale(0.3, 0.3);
 
         //Player animation when walking left. Repeat:-1 is a loop.
         // https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html
