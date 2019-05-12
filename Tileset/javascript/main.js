@@ -5,7 +5,7 @@ import MiniGame2 from './minigame2.js'
 import testText from '../mini_games/testText.js'
 
 
-const screenwidth = window.innerHeight * 1.20;
+const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
 
 const config = {

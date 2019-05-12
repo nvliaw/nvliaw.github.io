@@ -1,6 +1,6 @@
 let current_score = 0;
 let mainScoreText;
-const screenwidth = window.innerHeight * 1.20;
+const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
 let face = 'down';
 
@@ -11,10 +11,10 @@ export default class MainHouse extends Phaser.Scene {
         super({ key: 'MainHouse'});
     }
 
-    init (data)
-    {
-        current_score += data.score;
-    }
+    // init (data)
+    // {
+    //     current_score += data.score;
+    // }
 
 
     preload() {
@@ -38,23 +38,26 @@ export default class MainHouse extends Phaser.Scene {
         let map = this.make.tilemap({ key: "map" });
         const tileset = map.addTilesetImage("house", "tileImage");
 
+        // Calculate height & width of an individual tile. Height and width are equal because tiles are squares.
+        let tileLength = screenheight / 8;
+
         // Create each layer, corresponds to the JSON map file //
         let floorLayer = map.createStaticLayer("floor", tileset, 0, 0);
         let wallLayer = map.createStaticLayer("wall", tileset, 0, 0);
         let objectLayer = map.createStaticLayer("object", tileset, 0, 0);
         let decorLayer = map.createStaticLayer("decor", tileset, 0, 0);
         //Stretch the lay's width and height to fit to the screen.
-        floorLayer.displayWidth = screenwidth;
-        floorLayer.displayHeight = screenheight;
-        wallLayer.displayWidth = screenwidth;
-        wallLayer.displayHeight = screenheight;
-        objectLayer.displayWidth = screenwidth;
-        objectLayer.displayHeight = screenheight;
-        decorLayer.displayWidth = screenwidth;
-        decorLayer.displayHeight = screenheight;
+        let aspectHeight = 8;
+        let aspectWidth = 4.5;
 
-        // Calculate height & width of an individual tile. Height and width are equal because tiles are squares.
-        let tileLength = screenheight / objectLayer.tilemap.height;
+        floorLayer.displayWidth = 12 * tileLength;
+        floorLayer.displayHeight = 10 * tileLength;
+        wallLayer.displayWidth = 12 * tileLength;
+        wallLayer.displayHeight = 10 * tileLength;
+        objectLayer.displayWidth = 12 * tileLength;
+        objectLayer.displayHeight = 10 * tileLength;
+        decorLayer.displayWidth = 12 * tileLength;
+        decorLayer.displayHeight = 10 * tileLength;
 
         //Player creation
         this.player = this.physics.add.sprite(screenwidth*0.25, screenheight*0.75, 'hero');
@@ -121,7 +124,7 @@ export default class MainHouse extends Phaser.Scene {
         });
 
         //Prevent player from moving outside canvas walls.
-        this.player.setCollideWorldBounds(true);
+        // this.player.setCollideWorldBounds(true);
 
         // Set collision for layers
         map.setCollisionBetween(1, 999, true, true, wallLayer);
@@ -148,7 +151,7 @@ export default class MainHouse extends Phaser.Scene {
                 if (this.fridge.y - tileLength < this.player.y && this.player.y < this.fridge.y + tileLength) {
                     this.scene.setVisible(false);
                     this.scene.sleep();
-                    this.scene.launch('MiniGame2');
+                    this.scene.launch('MiniGame1');
                 }
             }
         }, this);
@@ -192,7 +195,14 @@ export default class MainHouse extends Phaser.Scene {
                 }
             }
         }, this);
+
+        // prevents camera from going past boundaries
+        this.cameras.main.setBounds(0, 0, tileLength * 12, tileLength * 10);
+        console.log(tileLength * 12)
+        // makes camera follow player
+        this.cameras.main.startFollow(this.player);
     }
+
 
     updateScore (parent, score) {
         current_score += score.score;
@@ -204,24 +214,23 @@ export default class MainHouse extends Phaser.Scene {
         // Activepointer allows both mouse clicks and touch screen to work.
         if (this.input.activePointer.isDown)
         {
-            //Move player towards mouse click or finger touch at velocity of 250.
-            this.physics.moveTo(this.player, this.input.activePointer.x, this.input.activePointer.y, 250);
+            this.physics.moveTo(this.player, this.input.activePointer.worldX, this.input.activePointer.worldY, 250);
 
             //If player within 5% of mouseclick, they will stop running and plays idle animation. May have to adjust the tolerance number.
-            if (Math.abs(this.player.x - this.input.activePointer.x) < screenwidth*0.02 && Math.abs(this.player.y - this.input.activePointer.y) < screenheight*0.02) {
+            if (Math.abs(this.player.x - this.input.activePointer.worldX) < screenwidth*0.01 && Math.abs(this.player.y - this.input.activePointer.worldY) < screenheight*0.01) {
                 {
                     this.player.body.velocity.setTo(0, 0);
                     this.player.anims.play('idle' + face, true);
                 }
             }
             //Else if player's position < clicked position, player runs right.
-            else if (this.player.x < this.input.activePointer.x)
+            else if (this.player.x < this.input.activePointer.worldX)
             {
-                if (this.player.y - this.input.activePointer.y > this.input.activePointer.x - this.player.x) {
+                if (this.player.y - this.input.activePointer.worldY > this.input.activePointer.worldX - this.player.x) {
                     this.player.anims.play('up', true);
                     face = 'up';
                 }
-                else if (this.input.activePointer.y - this.player.y > this.input.activePointer.x - this.player.x){
+                else if (this.input.activePointer.worldY - this.player.y > this.input.activePointer.worldX - this.player.x){
                     this.player.anims.play('down', true);
                     face = 'down';
                 }
@@ -232,11 +241,11 @@ export default class MainHouse extends Phaser.Scene {
             }
             //Otherwise player runs left.
             else {
-                if (this.player.y - this.input.activePointer.y > this.player.x - this.input.activePointer.x) {
+                if (this.player.y - this.input.activePointer.worldY > this.player.x - this.input.activePointer.worldX) {
                     this.player.anims.play('up', true);
                     face = 'up';
                 }
-                else if (this.input.activePointer.y - this.player.y > this.player.x - this.input.activePointer.x) {
+                else if (this.input.activePointer.worldY - this.player.y > this.player.x - this.input.activePointer.worldX) {
                     this.player.anims.play('down', true);
                     face = 'down';
                 }

@@ -155,7 +155,7 @@ export default class Boot extends Phaser.Scene {
         this.sound.pauseOnBlur = false;
 
         play_button.on('pointerdown', () => {
-            this.scene.start('MainHouse', {score: 0});
+            this.scene.start('MainHouse');
         });
 
         setting_button.on('pointerdown', () => {
