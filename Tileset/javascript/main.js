@@ -2,7 +2,7 @@ import Boot from './boot.js'
 import MainHouse from './mainHouse.js'
 import MiniGame1 from './minigame1.js'
 import MiniGame2 from './minigame2.js'
-import testText from '../mini_games/testText.js'
+import Dialog from './dialog.js'
 
 
 const screenwidth = window.innerWidth;
@@ -11,10 +11,10 @@ const screenheight = window.innerHeight;
 const config = {
     type: Phaser.AUTO, // Which renderer to use
     parent: "game-container",
-    scene: [Boot, MainHouse, MiniGame1, MiniGame2, testText],
+    scene: [Boot, MainHouse, MiniGame1, MiniGame2, Dialog],
     scale: {
         parent: "game-container",
-        mode: Phaser.Scale.FIT,
+        mode: Phaser.Scale.ENVELOP,
         width: screenwidth,
         height: screenheight
     },
@@ -24,8 +24,7 @@ const config = {
         arcade: {
             gravity: { y: 0},
         }
-    },
-    backgroundColor: '#000000'
+    }
 };
 
 let game = new Phaser.Game(config);

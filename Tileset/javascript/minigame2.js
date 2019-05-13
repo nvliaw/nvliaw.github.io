@@ -1,6 +1,5 @@
-const screenwidth = window.innerHeight * 1.20;
+const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
-
 
 export default class MiniGame2 extends Phaser.Scene {
 
@@ -16,15 +15,12 @@ export default class MiniGame2 extends Phaser.Scene {
     }
 
     create() {
-        // I think this is just tree1.
-        // let treeSprite = game.add.sprite(400, 300, 'tree');
-        // treeSprite.anchor.setTo(0.5, 0.5);
-
         let treeData = [
             {name: "Tree1", image: 'tree1', maxHP: 10},
             {name: "Tree2", image: 'tree2', maxHP: 20},
             {name: "Tree3", image: 'tree3', maxHP: 30},
         ];
+
         let trees = this.physics.add.group();
 
         treeData.forEach(function(data){
@@ -53,11 +49,11 @@ export default class MiniGame2 extends Phaser.Scene {
                 treeHealthText.text = "TREE DIED" ? currentTree.health + ' HP' : 'DEAD';
 
                 // Increase score by 1 for each click
-                player.score += 1;
+                this.player.score += 1;
                 tree.health -= 1;
 
                 if (tree.health === 0) {
-                    player.score += tree.maxHP;
+                    this.player.score += tree.maxHP;
                     tree.health = tree.maxHP;
                     tree.x = screenwidth*2;
                     tree.y = screenheight*2;
@@ -68,8 +64,8 @@ export default class MiniGame2 extends Phaser.Scene {
                 }
 
                 // update the player's score text
-                scoreText.text = "score: " + player.score;
-                MiniGame2.prototype.updateScore(player.score);
+                scoreText.text = "Score: " + this.player.score;
+                // MiniGame2.prototype.updateScore(this.player.score);
                 MiniGame2.prototype.playtween(this, currentTree);
             }, this);
 
@@ -92,63 +88,66 @@ export default class MiniGame2 extends Phaser.Scene {
         // this.treeInfo.position.setTo(this.currentTree.x - 200, this.currentTree.y + 100);
         // this.treeInfo.x = currentTree.x - 200;
         // this.treeInfo.y = currentTree.y + 100;
-        let treeNameText = this.add.text(0, 0, currentTree.details.name, {
-            font: '48px Arial Black',
+        let treeNameText = this.add.text(currentTree.x, screenheight*0.75, currentTree.details.name, {
+            font: '3.5em Arial Black',
             fill: '#fff',
             strokeThickness: 1
         });
         treeNameText.setPosition(currentTree.x, currentTree.y + 200);
         treeNameText.setOrigin(0.5, 0.5);
-        let treeHealthText = this.add.text(screenwidth/2, screenheight - 20, currentTree.health + ' HP', {
-            font: '32px Arial Black',
+        let treeHealthText = this.add.text(screenwidth/2, screenheight*0.92, currentTree.health + ' HP', {
+            font: '3.5em Arial Black',
             fill: '#fff',
             strokeThickness: 1
         });
-        treeHealthText.setOrigin(0.5, 1);
+        treeHealthText.setOrigin(0.5, 0.5);
 
         // Represents the player
-        let player = {
+        this.player = {
             clickDamage: 1,
             score: 0
         };
 
         // Show the score on screen
-        let scoreText = this.add.text(screenwidth/2, 80 , "Score: " + player.score, {
-            font: '28px Arial Black',
+        let scoreText = this.add.text(screenwidth*0.05, screenheight*0.02 , "Score: " + this.player.score, {
+            font: '3em Arial Black',
             fill: '#fff',
             strokeThickness: 1
         });
-        scoreText.setOrigin(0.5, 0.5);
+        scoreText.setOrigin(0, 0);
 
         // Timer on the top right of the screen
-        this.timer = 500;
-        this.timerText = this.add.text(screenwidth - 20, 20, 'Time left: ' + this.timer, {
-            font: '28px Arial Black',
+        this.timer = 200;
+        this.timerText = this.add.text(screenwidth*0.05, screenheight*0.1, 'Time left: ' + this.timer, {
+            font: '3em Arial Black',
             fill: '#fff',
             strokeThickness: 1
         });
-        this.timerText.setOrigin(1, 0)
+        this.timerText.setOrigin(0, 0)
     }
 
     update() {
-        console.log(this);
         if (this.timer > 0){
             this.decrement();
         }
         if (this.timer === 0){
             this.scene.sleep();
-            console.log(this.score);
         }
     }
 
-    updateScore(score) {
-        console.log(this);
-        this.score = score;
-    }
+    // updateScore(score) {
+    //     console.log(this);
+    //     this.score = score;
+    // }
 
     decrement() {
         this.timer -= 1;
         this.timerText.setText('Time left: ' + this.timer);
+        if (this.timer === 0) {
+            this.scene.stop();
+            this.scene.wake('MainHouse', {score: this.player.score,
+                checkGame: true});
+        }
     }
 
     // Shows the damage text when clicking

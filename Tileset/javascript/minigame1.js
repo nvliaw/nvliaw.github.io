@@ -1,4 +1,4 @@
-const screenwidth = window.innerHeight * 1.20;
+const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
 let face = 'down';
 
@@ -30,8 +30,12 @@ export default class MiniGame1 extends Phaser.Scene {
         this.cheese.setScale(1.50, 1.50);
         this.meat = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 6);
         this.meat.setScale(1.50, 1.50);
-        this.broccoli = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 3);
-        this.broccoli.setScale(1.50, 1.50);
+        this.broccoli_1 = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 3);
+        this.broccoli_1.setScale(1.50, 1.50);
+        this.broccoli_2 = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 3);
+        this.broccoli_2.setScale(1.50, 1.50);
+        this.broccoli_3 = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 3);
+        this.broccoli_3.setScale(1.50, 1.50);
         this.rice = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 2);
         this.rice.setScale(1.50, 1.50);
         this.fish = this.physics.add.sprite(Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85), Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85), 'foodset', 4);
@@ -175,8 +179,14 @@ export default class MiniGame1 extends Phaser.Scene {
             this.hit_rice();
         }
         // If player overlaps with the meat, call hit_broccoli()
-        if (this.physics.overlap(this.player, this.broccoli)) {
-            this.hit_broccoli();
+        if (this.physics.overlap(this.player, this.broccoli_1)) {
+            this.hit_broccoli(this.broccoli_1);
+        }
+        if (this.physics.overlap(this.player, this.broccoli_2)) {
+            this.hit_broccoli(this.broccoli_2);
+        }
+        if (this.physics.overlap(this.player, this.broccoli_3)) {
+            this.hit_broccoli(this.broccoli_3);
         }
         // If player overlaps with the meat, call hit_fish()
         if (this.physics.overlap(this.player, this.fish)) {
@@ -216,12 +226,12 @@ export default class MiniGame1 extends Phaser.Scene {
         this.scoreText.setText('score: ' + this.score);
     }
 
-    hit_broccoli() {
+    hit_broccoli(broccolli) {
         //Play tween animation
-        this.playtween(this.broccoli, -25);
+        this.playtween(broccolli, -25);
         // Change the position of the cheese randomly
-        this.broccoli.x = Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85);
-        this.broccoli.y = Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85);
+        broccolli.x = Phaser.Math.Between(screenwidth * 0.10, screenwidth * 0.85);
+        broccolli.y = Phaser.Math.Between(screenheight * 0.10, screenheight * 0.85);
 
         // Increment the score
         this.score -= 25;
@@ -293,7 +303,8 @@ export default class MiniGame1 extends Phaser.Scene {
         this.timerText.setText('Time left: ' + this.timer);
         if (this.timer === 0) {
             this.scene.stop();
-            this.scene.wake('MainHouse', {score: this.score});
+            this.scene.wake('MainHouse', {score: this.score,
+            checkGame: true});
         }
     }
 }

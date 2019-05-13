@@ -1,8 +1,10 @@
-let current_score = 0;
-let mainScoreText;
 const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
+let current_score = 0;
 let face = 'down';
+let currentDate = {day: 1,
+    timeOfDay: "Morning"};
+let dateText;
 
 export default class MainHouse extends Phaser.Scene {
 
@@ -10,12 +12,6 @@ export default class MainHouse extends Phaser.Scene {
     {
         super({ key: 'MainHouse'});
     }
-
-    // init (data)
-    // {
-    //     current_score += data.score;
-    // }
-
 
     preload() {
         // Preload hero //
@@ -35,21 +31,24 @@ export default class MainHouse extends Phaser.Scene {
 
     create() {
         // Create the map //
-        let map = this.make.tilemap({ key: "map" });
-        const tileset = map.addTilesetImage("house", "tileImage");
+        this.map = this.make.tilemap({ key: "map" });
+        const tileset = this.map.addTilesetImage("house", "tileImage");
 
         // Calculate height & width of an individual tile. Height and width are equal because tiles are squares.
         let tileLength = screenheight / 8;
 
         // Create each layer, corresponds to the JSON map file //
-        let floorLayer = map.createStaticLayer("floor", tileset, 0, 0);
-        let wallLayer = map.createStaticLayer("wall", tileset, 0, 0);
-        let objectLayer = map.createStaticLayer("object", tileset, 0, 0);
-        let decorLayer = map.createStaticLayer("decor", tileset, 0, 0);
-        //Stretch the lay's width and height to fit to the screen.
+        let floorLayer = this.map.createStaticLayer("floor", tileset, 0, 0);
+        let wallLayer = this.map.createStaticLayer("wall", tileset, 0, 0);
+        let objectLayer = this.map.createStaticLayer("object", tileset, 0, 0);
+        let decorLayer = this.map.createDynamicLayer("decor", tileset, 0, 0);
+
+        // Using an aspect ratio of 16:9, we modify our canvas to show 8 tiles high. The width will be determined by the screen size.
         let aspectHeight = 8;
         let aspectWidth = 4.5;
 
+        //Makes display height and width equal to the number of tiles of our map. This makes sure each tile
+        //is a square as long as our map size does not change.
         floorLayer.displayWidth = 12 * tileLength;
         floorLayer.displayHeight = 10 * tileLength;
         wallLayer.displayWidth = 12 * tileLength;
@@ -62,10 +61,12 @@ export default class MainHouse extends Phaser.Scene {
         //Player creation
         this.player = this.physics.add.sprite(screenwidth*0.25, screenheight*0.75, 'hero');
 
-        //Scale player to specified percentage.
-        this.player.setScale(1, 1);
+        //Scale player to specified percentage. Will need to change this to tileLength maybe?
+        //Current player size is set to 70% of tileLength while keeping the ratio of 46:32 (height:width)
+        this.player.displayHeight = tileLength * 0.70;
+        this.player.displayWidth = tileLength * 32/46 * 0.70;
 
-        //Player animation when walking left. Repeat:-1 is a loop.
+        //Player animation when walking. Repeat: -1 means loop the frames.
         // https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html
         this.anims.create({
             key: 'right',
@@ -95,6 +96,7 @@ export default class MainHouse extends Phaser.Scene {
             repeat: -1
         });
 
+        //The idle animations are used to determine where the player faces when movement stops.
         this.anims.create({
             key: 'idledown',
             frames: this.anims.generateFrameNumbers('hero', { start: 0, end: 0 }),
@@ -123,22 +125,22 @@ export default class MainHouse extends Phaser.Scene {
             repeat: -1
         });
 
-        //Prevent player from moving outside canvas walls.
+        //Prevent player from moving outside canvas walls. Currently this does not work as intended due to changing the camera to scroll with player.
         // this.player.setCollideWorldBounds(true);
 
-        // Set collision for layers
-        map.setCollisionBetween(1, 999, true, true, wallLayer);
-        map.setCollisionBetween(1, 999, true, true, objectLayer);
+        // Set collision for layer.
+        this.map.setCollisionBetween(1, 999, true, true, wallLayer);
+        this.map.setCollisionBetween(1, 999, true, true, objectLayer);
         // objectLayer.setCollisionBetween(1, 999);
 
         //Add collision between player and objects in layer.
         this.physics.add.collider(this.player, wallLayer);
         this.physics.add.collider(this.player, objectLayer);
 
-        console.log(map);
-        map.setLayer(2);
+        console.log(this.map);
+        this.map.setLayer(2);
         // Create game object from tilemap. This allows the fridge to be clicked.
-        this.fridge = map.createFromTiles(7, null, {key: 'tileSheet', frame: 6})[0];
+        this.fridge = this.map.createFromTiles(7, null, {key: 'tileSheet', frame: 6})[0];
         console.log(this.fridge);
 
         // Adjust height and width to match the current size of a tile.
@@ -151,7 +153,7 @@ export default class MainHouse extends Phaser.Scene {
                 if (this.fridge.y - tileLength < this.player.y && this.player.y < this.fridge.y + tileLength) {
                     this.scene.setVisible(false);
                     this.scene.sleep();
-                    this.scene.launch('MiniGame1');
+                    this.scene.launch('MiniGame2');
                 }
             }
         }, this);
@@ -160,27 +162,31 @@ export default class MainHouse extends Phaser.Scene {
         this.fridge.x = this.fridge.x + tileLength/2;
         this.fridge.y = this.fridge.y + tileLength/2;
 
-        mainScoreText = this.add.text(screenwidth*0.95, screenheight*0.02, 'Score: ' + current_score, {
+        this.mainScoreText = this.add.text(screenwidth*0.95, screenheight*0.02, 'Score: ' + current_score, {
             font: '2em Arial Black',
             fill: 'black',
             strokeThickness: 1
         });
-        mainScoreText.setOrigin(1, 0);
+        // Shows the accumulated score from playing the mini games
+        this.mainScoreText.setOrigin(1, 0);
+        this.mainScoreText.setScrollFactor(0);
+
+        // Update the score after each mini game is played
         this.events.on('wake', this.updateScore, this);
 
-        // For text box to appear
-        let testText = "This should pop up some text.";
-        this.textBoxText = this.add.text(0, 0, testText, {
+        // Update the day and time of day each time a mini game is played
+        this.events.on('wake', this.updateDate, this);
+
+
+        // Shows the current day and time of day
+        dateText = this.add.text(screenwidth*0.05, screenheight*0.02, "Day " + currentDate.day + " " + currentDate.timeOfDay,{
             font: '2em Arial Black',
             fill: 'black',
             strokeThickness: 1
         });
-        // this.textBoxText.setOrigin(0.5);
-        // this.textBoxText.visible = false;
-        //this.fridge = map.createFromTiles(9, null, {key: 'tileSheet', frame: 8})[0];
+        dateText.setScrollFactor(0);
 
-
-        this.oven = map.createFromTiles(5, null, {key: 'tileSheet', frame: 4})[0];
+        this.oven = this.map.createFromTiles(5, null, {key: 'tileSheet', frame: 4})[0];
         this.oven.displayHeight = tileLength;
         this.oven.displayWidth = tileLength;
         this.oven.x = this.oven.x + tileLength/2;
@@ -189,24 +195,124 @@ export default class MainHouse extends Phaser.Scene {
         this.oven.on('pointerdown', function(){
             if (this.oven.x - tileLength < this.player.x && this.player.x < this.oven.x + tileLength){
                 if (this.oven.y - tileLength < this.player.y && this.player.y < this.oven.y + tileLength){
-                    // this.scene.setVisible(false);
                     this.scene.pause();
-                    this.scene.launch('testText');
+                    this.scene.launch('Dialog');
                 }
             }
         }, this);
 
         // prevents camera from going past boundaries
         this.cameras.main.setBounds(0, 0, tileLength * 12, tileLength * 10);
-        console.log(tileLength * 12)
+
         // makes camera follow player
         this.cameras.main.startFollow(this.player);
-    }
 
+        // Goes to decor layer
+        this.map.setLayer(3);
+        this.goldfish = this.map.createFromTiles(50, null, {key: 'tileSheet', frame: 49})[0];
+        this.goldfish.displayHeight = tileLength;
+        this.goldfish.displayWidth = tileLength;
+        this.goldfish.x = this.goldfish.x + tileLength/2;
+        this.goldfish.y = this.goldfish.y + tileLength/2;
+        this.goldfish.setInteractive();
+        this.goldfish.on('pointerdown', function(){
+            if (this.goldfish.x - tileLength < this.player.x && this.player.x < this.goldfish.x + tileLength){
+                if (this.goldfish.y - tileLength < this.player.y && this.player.y < this.goldfish.y + tileLength){
+                    this.scene.pause();
+                    this.scene.launch('MiniGame1');
+                }
+            }
+        }, this);
+
+
+        // this.updatePlant(map)
+        // map.setLayer(3);
+        //
+        // this.plant = map.replaceByIndex(16, 20);
+        // this.plant = map.replaceByIndex(17, 19);
+        // this.map.setLayer(3);
+        // this.map.removeTileAt(5, 1);
+        // this.map.removeTileAt(5, 0);
+        // console.log(current_score)
+        // if (current_score >= 50){
+        //     map.putTileAt(16, 5, 1);
+        //     map.putTileAt(17, 5, 0);
+        // }
+
+    }
 
     updateScore (parent, score) {
         current_score += score.score;
-        mainScoreText.setText('Score: ' + current_score)
+        this.mainScoreText.setText('Score: ' + current_score);
+        // Update the plant's look to correspond to the score (The higher the score, the more the plant dies)
+        this.updatePlant()
+    }
+
+    updateDate(parent, dateBoolean){
+        // Only update the current date if player clicked on a mini game
+        if (dateBoolean.checkGame === true){
+            if (currentDate.timeOfDay === "Night"){
+                currentDate.day += 1;
+                currentDate.timeOfDay = "Morning";
+            }
+            else if (currentDate.timeOfDay === "Morning"){
+                currentDate.timeOfDay = "Noon";
+            }
+            else{
+                currentDate.timeOfDay = "Night";
+            }
+            dateText.setText("Day " + currentDate.day + " " + currentDate.timeOfDay);
+        }
+        // Sets the window to the correct time of day
+        this.updateWindow();
+    }
+
+    // Easter Egg Implementation
+    // The plant slowly withers as the player's score increases (higher score = worser for the environment!)
+    updatePlant(){
+        // Set to decor layer then remove the plant sprites
+        this.map.setLayer(3);
+        this.map.removeTileAt(5, 1);
+        this.map.removeTileAt(5, 0);
+        // Set the plant sprite according to the right score
+        if (0 <= current_score && current_score < 50){
+            this.map.putTileAt(16, 5, 1);
+            this.map.putTileAt(17, 5, 0);
+        }
+        if (50 <= current_score && current_score < 100){
+            this.map.putTileAt(16, 5, 1);
+            this.map.putTileAt(18, 5, 0);
+        }
+        if (100 <= current_score && current_score < 150){
+            this.map.putTileAt(16, 5, 1);
+            this.map.putTileAt(19, 5, 0);
+        }
+        if (150 <= current_score && current_score < 200){
+            this.map.putTileAt(20, 5, 1);
+        }
+        if (200 <= current_score){
+            this.map.putTileAt(21, 5, 1);
+        }
+    }
+
+    updateWindow(){
+        // Set to decor layer and remove the window sprites
+        this.map.setLayer(3);
+        this.map.removeTileAt(3, 0);
+        this.map.removeTileAt(4, 0);
+        // Set the window sprite according to the right time of day
+        if (currentDate.timeOfDay == "Morning"){
+            this.map.putTileAt(22, 3, 0);
+            this.map.putTileAt(23, 4, 0);
+        }
+        if (currentDate.timeOfDay == "Noon"){
+            this.map.putTileAt(24, 3, 0);
+            this.map.putTileAt(25, 4, 0);
+        }
+        if (currentDate.timeOfDay == "Night"){
+            this.map.putTileAt(26, 3, 0);
+            this.map.putTileAt(27, 4, 0);
+        }
     }
 
     update() {
