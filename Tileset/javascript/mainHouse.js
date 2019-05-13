@@ -34,8 +34,8 @@ export default class MainHouse extends Phaser.Scene {
         this.map = this.make.tilemap({ key: "map" });
         const tileset = this.map.addTilesetImage("house", "tileImage");
 
-        // Calculate height & width of an individual tile. Height and width are equal because tiles are squares.
-        let tileLength = screenheight / 8;
+        // Hardset the tiles to a fixed pixel size, or camera will stutter
+        let tileLength = 96;
 
         // Create each layer, corresponds to the JSON map file //
         let floorLayer = this.map.createStaticLayer("floor", tileset, 0, 0);
@@ -59,12 +59,12 @@ export default class MainHouse extends Phaser.Scene {
         decorLayer.displayHeight = 10 * tileLength;
 
         //Player creation
-        this.player = this.physics.add.sprite(screenwidth*0.25, screenheight*0.75, 'hero');
+        this.player = this.physics.add.sprite(1105, 170, 'hero');
 
         //Scale player to specified percentage. Will need to change this to tileLength maybe?
         //Current player size is set to 70% of tileLength while keeping the ratio of 46:32 (height:width)
-        this.player.displayHeight = tileLength * 0.70;
-        this.player.displayWidth = tileLength * 32/46 * 0.70;
+        this.player.displayHeight = 92;
+        this.player.displayWidth = 64;
 
         //Player animation when walking. Repeat: -1 means loop the frames.
         // https://photonstorm.github.io/phaser3-docs/Phaser.GameObjects.Components.Animation.html
@@ -126,7 +126,8 @@ export default class MainHouse extends Phaser.Scene {
         });
 
         //Prevent player from moving outside canvas walls. Currently this does not work as intended due to changing the camera to scroll with player.
-        // this.player.setCollideWorldBounds(true);
+        this.physics.world.setBounds(0, 0, tileLength * 12, tileLength * 10);
+        this.player.setCollideWorldBounds(true);
 
         // Set collision for layer.
         this.map.setCollisionBetween(1, 999, true, true, wallLayer);
@@ -301,15 +302,15 @@ export default class MainHouse extends Phaser.Scene {
         this.map.removeTileAt(3, 0);
         this.map.removeTileAt(4, 0);
         // Set the window sprite according to the right time of day
-        if (currentDate.timeOfDay == "Morning"){
+        if (currentDate.timeOfDay === "Morning"){
             this.map.putTileAt(22, 3, 0);
             this.map.putTileAt(23, 4, 0);
         }
-        if (currentDate.timeOfDay == "Noon"){
+        if (currentDate.timeOfDay === "Noon"){
             this.map.putTileAt(24, 3, 0);
             this.map.putTileAt(25, 4, 0);
         }
-        if (currentDate.timeOfDay == "Night"){
+        if (currentDate.timeOfDay === "Night"){
             this.map.putTileAt(26, 3, 0);
             this.map.putTileAt(27, 4, 0);
         }
