@@ -1,88 +1,22 @@
-ol {
-    list-style-position: inside;
-    list-style-type: disc;
+body {
+    background-image: url('../css/images/earth.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
-li {
-    padding: 10px;
-    font-family: Verdana;
+#title {
+    position: absolute;
+    letter-spacing: 30px;
+    color: rebeccapurple;
+    top: 10%;
+    left: 15%;
+    font-size: 100px;
 }
 
-b {
-    font-size: large;
-}
-
-div {
-    margin-bottom: 15px; 
-    max-width: 1000px;
-}  
-
-#course1 {
-    background-color: lightpink;
-}
-
-#course2 {
-    background-color: mediumorchid;
-}
-
-#course3 {
-    background-color: aquamarine;
-}
-
-#course4 {
-    background-color: violet;
-}
-
-#course5 {
-    background-color: navajowhite;
-}
-
-#course6 {
-    background-color: honeydew;
-}
-
-#longtext {
-    width: 500px;
-    overflow-x: scroll;
-    height: 50px;
-    white-space: nowrap;
-}
-
-#profile {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-}
-
-#bcit, #cartoon {
-    float: right;
-    height: 75px;
-    width: 75px;
-    margin-right: 25px;
-}
-
-.picturelinks {
-    width: 500px;
-    border: 2px solid green;
-    overflow: auto;
-    padding: 10px;
-    float: left;
-}
-
-#cartoonlink {
-    clear: left;
-} 
-
-#resumelinks {
-    clear: left;
-    width: 500px;
-    border: 2px solid black;
-    text-align: center;
-    padding: 20px 0px;
-}
-
-.courses {
-    width: 50%;
-    margin-left: 0px;
-    border: 2px solid black;
+#firebaseui-auth-container {
+    position: absolute;
+    width: 20%;
+    top: 40%;
+    left: 45%;
 }
