@@ -1,8 +1,8 @@
 // Dialogue logic
 
-const COLOR_PRIMARY = 205383;
-const COLOR_LIGHT = 0x7b5e57;
-const COLOR_DARK = 0x260e04;
+const COLOR_PRIMARY = 0x4fa19e;
+const COLOR_LIGHT = 0x383838;
+const COLOR_DARK = 0xc1f9f7;
 const screenwidth = window.innerWidth;
 const screenheight = window.innerHeight;
 
@@ -14,9 +14,11 @@ export default class Demo extends Phaser.Scene {
         })
     }
 
-    // Collect content argument to pass through this module
+    // Collect content argument passed to this module
     init(data) {
         this.content = data.content;
+        this.spriteSet =  data.spriteSet;
+        this.spriteFrame = data.spriteFrame;
     }
 
 
@@ -28,23 +30,34 @@ export default class Demo extends Phaser.Scene {
             sceneKey: 'rexUI'
         });
 
+        // Load appendix
+        this.load.image('appendix', './sprite/appendix.png');
+
+        // Load arrow for normal dialogue
         this.load.image('nextPage', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/arrow-down-left.png');
     }
 
     create() {
+
+        // If the spriteSet key is empty, no images will be loaded
+        if (this.spriteSet != null) {
+            // Creates a random image, scaled to 96 x 96
+            // 'Appendix' is the background, appendixObj is the actual object pictured
+            let appendix = this.add.image(screenwidth / 2, screenheight / 2, 'appendix');
+            let appendixObj = this.physics.add.sprite(screenwidth / 2, screenheight / 2, this.spriteSet, this.spriteFrame);
+            // Scaling
+            appendix.setScale(6, 6);
+            appendixObj.setScale(4, 4);
+        }
+
         // Sets where you want the text box to go + what size it should be
         let {width, height} = this.sys.game.canvas;
-        console.log(width);
-        console.log(height);
         createTextBox(this, screenwidth*0.01, screenheight*0.8, {
-            wrapWidth: screenwidth*0.8,
-            // fixedWidth: 300,
-            // fixedHeight: 75,
-        }) // .start(<content>, <typing speed>), lower number = faster speed
+            wrapWidth: screenwidth*0.8
+        }, 'nextPage') // .start(<content>, <typing speed>), lower number = faster speed
             .start(this.content, 10);
-    }
 
-    update() {}
+    }
 }
 
 // GetValue = Retrieves a value from an object;
@@ -55,13 +68,12 @@ export default class Demo extends Phaser.Scene {
 
 const GetValue = Phaser.Utils.Objects.GetValue;
 // constructor for the createTextBox object
-var createTextBox = function (scene, x, y, config) {
-    var wrapWidth = GetValue(config, 'wrapWidth', 0);
-    var fixedWidth = GetValue(config, 'fixedWidth', 0);
-    var fixedHeight = GetValue(config, 'fixedHeight', 0);
-    console.log(wrapWidth, fixedWidth, fixedHeight);
+let createTextBox = function (scene, x, y, config, image) {
+    let wrapWidth = GetValue(config, 'wrapWidth', 0);
+    let fixedWidth = GetValue(config, 'fixedWidth', 0);
+    let fixedHeight = GetValue(config, 'fixedHeight', 0);
     // Further documentation: https://rexrainbow.github.io/phaser3-rex-notes/docs/site/ui-textbox/
-    var textBox = scene.rexUI.add.textBox({
+    let textBox = scene.rexUI.add.textBox({
         x: x,
         y: y,
 
@@ -73,7 +85,7 @@ var createTextBox = function (scene, x, y, config) {
         // text: getBuiltInText(scene, wrapWidth, fixedWidth, fixedHeight),
         text: getBBcodeText(scene, wrapWidth, fixedWidth, fixedHeight),
 
-        action: scene.add.image(0, 0, 'nextPage').setTint(COLOR_LIGHT).setVisible(false),
+        action: scene.add.image(0, 0, image).setVisible(false),
         actionMask: true,
 
         // Padding space
@@ -135,7 +147,8 @@ var getBuiltInText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
         .setFixedSize(fixedWidth, fixedHeight);
 };
 
-var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
+
+let getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
     return scene.rexUI.add.BBCodeText(0, 0, '', {
         fixedWidth: fixedWidth,
         fixedHeight: fixedHeight,
@@ -148,13 +161,3 @@ var getBBcodeText = function (scene, wrapWidth, fixedWidth, fixedHeight) {
         maxLines: 3
     })
 };
-
-// var config = {
-//     type: Phaser.AUTO,
-//     parent: 'phaser-example',
-//     width: 800,
-//     height: 600,
-//     scene: Demo
-// };
-//
-// var game = new Phaser.Game(config);

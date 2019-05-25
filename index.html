@@ -1,16 +1,50 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Title</title>
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.2/dist/phaser.js"></script>
-    <!-- Access Firebase -->
+    <title>Stomp The World</title>
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
     <script src="https://www.gstatic.com/firebasejs/5.9.0/firebase.js"></script>
-    <script src="./javascript/main.js" type="module"></script>
+    <script>
+        var firebaseConfig = {
+            apiKey: "AIzaSyBFhOVCixHYLYyR0eHJEZAq3pL480gL59I",
+            authDomain: "comp-2930-team-09.firebaseapp.com",
+            databaseURL: "https://comp-2930-team-09.firebaseio.com",
+            projectId: "comp-2930-team-09",
+            storageBucket: "comp-2930-team-09.appspot.com",
+            messagingSenderId: "701468886359",
+            appId: "1:701468886359:web:4630972687e79482"
+        };
+        firebase.initializeApp(firebaseConfig);
+    </script>
+    <link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
-<body style="margin: 0px;">
+<body>
+<script>
+    // Initialize the FirebaseUI Widget using Firebase.
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+</script>
 
+<!-- The surrounding HTML is left untouched by FirebaseUI.
+ Your app may use that space for branding, controls and other customizations.-->
+<h1 id="title">STOMP THE WORLD</h1>
+<div id="firebaseui-auth-container"></div>
+
+<script>
+    var uiConfig = {
+        signInFlow: 'popup',
+        signInSuccessUrl: 'main.html',
+        signInOptions: [
+            firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+            firebase.auth.EmailAuthProvider.PROVIDER_ID
+        ],
+        // Terms of service url.
+        tosUrl: 'main.html',
+        // Privacy policy url.
+        privacyPolicyUrl: 'main.html'
+    };
+
+    // The start method will wait until the DOM is loaded.
+    ui.start('#firebaseui-auth-container', uiConfig);
+</script>
 </body>
 </html>
