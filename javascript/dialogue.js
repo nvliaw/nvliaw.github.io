@@ -26,7 +26,7 @@ export default class Demo extends Phaser.Scene {
         // Loads rexUI plugins
         this.load.scenePlugin({
             key: 'rexuiplugin',
-            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/plugins/dist/rexuiplugin.min.js',
+            url: 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/b9357198288c3f146a001ffb98c650e03250f0cd/plugins/dist/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
 
