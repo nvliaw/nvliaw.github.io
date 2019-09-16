@@ -1,0 +1,49 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+
+    
+    <script src="https://www.gstatic.com/firebasejs/5.9.1/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDMkOW4qJzEYUHD4XM54JUaYxJlG_LlOyY",
+        authDomain: "hangman-1be2a.firebaseapp.com",
+        databaseURL: "https://hangman-1be2a.firebaseio.com",
+        projectId: "hangman-1be2a",
+        storageBucket: "",
+        messagingSenderId: "23028470893"
+    };
+    firebase.initializeApp(config);
+    </script>
+
+    <title>Hangman!</title>
+    
+</head>
+<body>
+
+    <h1 id="title">Welcome to the hangman game!</h1>
+    <h3 id="description">Description of word: <span id="worddescription"></span></h3>
+    <h3>Lives: <span id="lives"></span></h3>
+    <h3>Score: <span id="score"></span></h3>
+    <p>Word: <span id="word"></span></p>
+    <div id="buttons"></div>
+    <div id="restartbutton">
+    <button id="restart">Restart</button>
+    </div>
+    <h1 id="end"></h1>
+    <table id="leaderboard" style="display:none">
+        <tr>
+            <th>Name</th>
+            <th>Score</th>
+        </tr>
+
+    </table>
+
+    <script type="text/javascript" src="./javascript/script.js"></script>
+
+</body>
+</html>
