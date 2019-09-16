@@ -2,7 +2,6 @@ body {
 	background-image: url(../images/background.jpg);
 	background-size: cover;
 	margin: 0;
-	min-width: 1300px;
 }
 
 a {
