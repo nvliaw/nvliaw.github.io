@@ -14,7 +14,7 @@ a {
 
 ul {
 	list-style-type: none;
-	position: fixed;
+	position: absolute;
 	width: 15%;
 	margin: 0;
 	padding: 0;
@@ -32,6 +32,8 @@ li a {
 	border: 1px solid white;
 	padding: 25px 0;
 	font-size: 1.2em;
+	min-width: 65px;
+	min-height: 25px;
 }
 
 div div a {
@@ -40,7 +42,7 @@ div div a {
 }
 
 li a:hover {
-	background-color: lightgreen;
+	background-color: lightblue;
 	color: white;
 }
 
@@ -69,13 +71,13 @@ li a:hover {
 }
 
 #credit {
-	position: absolute;
+	position: fixed;
 	bottom: 0;
 	right: 0;
 }
 
 .activepage {
-	background-color: green;
+	background-color: blue;
 	color: white;
 }
 
