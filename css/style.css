@@ -1,0 +1,81 @@
+body {
+	background-image: url(../images/background.jpg);
+	background-size: cover;
+	margin: 0;
+	min-width: 1300px;
+	min-height: 775px;
+}
+
+a {
+	text-align: center;
+	text-decoration: none;
+	color: white;
+}
+
+ul {
+	list-style-type: none;
+	position: fixed;
+	width: 15%;
+	margin: 0;
+	padding: 0;
+	top: 2.5%;
+	right: 2.5%;
+}
+
+li {
+	float: left;
+	width: 33.333333%;
+}
+
+li a {
+	display: block;
+	border: 1px solid white;
+	padding: 25px 0;
+	font-size: 1.2em;
+}
+
+div div a {
+	display: block;
+	border: 1px solid white;
+}
+
+li a:hover {
+	background-color: lightgreen;
+	color: white;
+}
+
+#content {
+	margin-top: 25%;
+	text-align: center;
+	color: white;
+}
+
+#projectlist {
+	margin-top: 10%;
+	margin-left: 10%;
+	width: 80%;
+	overflow: hidden;
+	padding: 0;
+}
+
+.project {
+	width: 45%;
+	text-align: center;
+	color: white;
+	float: left;
+	margin: 2.5%;
+	height: 40%;
+	padding: auto, 5px;
+}
+
+#credit {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+
+.activepage {
+	background-color: green;
+	color: white;
+}
+
